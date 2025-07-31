@@ -1,13 +1,12 @@
 import os
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
-
 from controllers.bot_controller import start, help_command, handle_message
 
 load_dotenv()
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
 
-if __name__ == "__main__":
+def main():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
@@ -16,3 +15,6 @@ if __name__ == "__main__":
 
     print("🤖 Bot rodando...")
     app.run_polling()
+
+if __name__ == "__main__":
+    main()

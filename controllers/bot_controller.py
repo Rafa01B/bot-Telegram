@@ -1,14 +1,14 @@
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 from controllers.weather_controller import get_weather_for_city
 
-def start(update: Update, context: CallbackContext):
-    update.message.reply_text("Olá! Me envie 'Clima [cidade]' para receber a previsão do tempo.")
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Olá! Me envie 'Clima [cidade]' para receber a previsão do tempo.")
 
-def help_command(update: Update, context: CallbackContext):
-    update.message.reply_text("Comandos disponíveis:\n/start - Início\n/help - Ajuda\n\nUse: Clima [cidade]")
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text("Comandos disponíveis:\n/start - Início\n/help - Ajuda\n\nUse: Clima [cidade]")
 
-def handle_message(update: Update, context: CallbackContext):
+async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.effective_user
     text = update.message.text
 
@@ -17,6 +17,6 @@ def handle_message(update: Update, context: CallbackContext):
     if text.lower().startswith("clima "):
         city = text[6:].strip()
         response = get_weather_for_city(city)
-        update.message.reply_text(response)
+        await update.message.reply_text(response)
     else:
-        update.message.reply_text("❗ Use o formato: Clima [cidade]")
+        await update.message.reply_text("❗ Use o formato: Clima [cidade]")
