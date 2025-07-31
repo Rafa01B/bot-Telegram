@@ -1,29 +1,22 @@
 from telegram import Update
-from telegram.ext import ContextTypes
+from telegram.ext import CallbackContext
 from controllers.weather_controller import get_weather_for_city
 
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "Olá! Me envie 'Clima [cidade]' para receber a previsão do tempo.\n"
-        "Use /help para ver os comandos disponíveis."
-    )
+def start(update: Update, context: CallbackContext):
+    update.message.reply_text("Olá! Me envie 'Clima [cidade]' para receber a previsão do tempo.")
 
-async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "/start - Iniciar o bot\n"
-        "/help - Mostrar esta mensagem\n"
-        "Clima [cidade] - Obter previsão do tempo para a cidade\n"
-    )
+def help_command(update: Update, context: CallbackContext):
+    update.message.reply_text("Comandos disponíveis:\n/start - Início\n/help - Ajuda\n\nUse: Clima [cidade]")
 
-async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text.strip()
-    if text.lower().startswith("clima") or text.lower().startswith("tempo"):
-        parts = text.split(" ", 1)
-        if len(parts) == 2:
-            city = parts[1]
-            weather_message = get_weather_for_city(city)
-            await update.message.reply_text(weather_message)
-        else:
-            await update.message.reply_text("Digite: Clima [nome da cidade]")
+def handle_message(update: Update, context: CallbackContext):
+    user = update.effective_user
+    text = update.message.text
+
+    print(f"[MSG] {user.username or user.first_name}: {text}")
+
+    if text.lower().startswith("clima "):
+        city = text[6:].strip()
+        response = get_weather_for_city(city)
+        update.message.reply_text(response)
     else:
-        await update.message.reply_text("Use: Clima [cidade] para obter a previsão.")
+        update.message.reply_text("❗ Use o formato: Clima [cidade]")
