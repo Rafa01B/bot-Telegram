@@ -1,17 +1,15 @@
 def format_weather_message(data):
+    nome = data.get("name")
+    clima = data["weather"][0]["description"].capitalize()
+    temp = data["main"]["temp"]
+    sensacao = data["main"]["feels_like"]
+    umidade = data["main"]["humidity"]
 
-    desc = data['weather'][0]['description'].capitalize()
-    temp = data['main']['temp']
-    feels = data['main']['feels_like']
-    humidity = data['main']['humidity']
-
-    message = (
-        f"🌤️ Clima em {data['name']}:\n"
-        f"- Descrição: {desc}\n"
-        f"- Temperatura: {temp}°C\n"
-        f"- Sensação térmica: {feels}°C\n"
-        f"- Umidade: {humidity}%\n\n"
-        f"- Autora: Rafaela Bezerra Rodrigues"
-
+    mensagem = (
+        f"🌤️ Clima em {nome}:\n"
+        f"- Descrição: {clima}\n"
+        f"- Temperatura: {temp}ºC\n"
+        f"- Sensação térmica: {sensacao}ºC\n"
+        f"- Umidade: {umidade}%"
     )
-    return message
+    return mensagem

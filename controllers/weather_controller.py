@@ -1,10 +1,12 @@
 from models.weather_model import get_weather_data
 from views.weather_view import format_weather_message
 
-def get_weather_for_city(city: str) -> str:
-    print(f"[DEBUG] Buscando clima para: {city}")
+def get_weather_for_city(city):
     data = get_weather_data(city)
-    print(f"[DEBUG] Dados recebidos: {data}")
-    if data is None:
-        return "❌ Cidade não encontrada ou erro ao obter dados do clima."
+    if not data:
+        return "❌ Não consegui encontrar a cidade ou ocorreu um erro na consulta."
+    
+    if data.get("cod") != 200:
+        return f"❌ Erro: {data.get('message', 'Cidade não encontrada')}"
+
     return format_weather_message(data)
