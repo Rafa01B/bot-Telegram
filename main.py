@@ -1,7 +1,11 @@
 import os
 import threading
+import asyncio
+import nest_asyncio
 from flask import Flask
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
+
+nest_asyncio.apply()
 
 app = Flask(__name__)
 
@@ -25,9 +29,8 @@ async def run_bot():
     await bot_app.run_polling()
 
 if __name__ == "__main__":
-    import asyncio
-
     flask_thread = threading.Thread(target=run_flask)
     flask_thread.start()
 
-    asyncio.run(run_bot())
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(run_bot())
