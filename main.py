@@ -17,7 +17,9 @@ def home():
     return "🤖 Bot está online!"
 
 def run_flask():
-    flask_app.run(host="0.0.0.0", port=8000)
+    port = int(os.environ.get("PORT", 8000))
+    flask_app.run(host="0.0.0.0", port=port)
+
 
 async def run_bot():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
