@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: bot-telegram-clima
+    env: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python main.py"
+    envVars:
+      - key: TELEGRAM_TOKEN
+        fromEnvVar: TELEGRAM_TOKEN
+      - key: WEATHER_API_KEY
+        fromEnvVar: WEATHER_API_KEY
