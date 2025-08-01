@@ -3,10 +3,9 @@ from views.weather_view import format_weather_message
 
 def get_weather_for_city(city):
     data = get_weather_data(city)
-    if not data:
-        return "❌ Não consegui encontrar a cidade ou ocorreu um erro na consulta."
-    
-    if data.get("cod") != 200:
-        return f"❌ Erro: {data.get('message', 'Cidade não encontrada')}"
+    print(f"[DEBUG] Dados recebidos da API: {data}")
 
-    return format_weather_message(data)
+    if data and str(data.get("cod")) == "200":
+        return format_weather_message(data)
+    else:
+        return "❌ Cidade não encontrada ou erro ao obter dados do clima."

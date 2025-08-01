@@ -1,15 +1,20 @@
 def format_weather_message(data):
-    nome = data.get("name")
-    clima = data["weather"][0]["description"].capitalize()
-    temp = data["main"]["temp"]
-    sensacao = data["main"]["feels_like"]
-    umidade = data["main"]["humidity"]
+    try:
+        cidade = data.get("name", "Cidade desconhecida")
+        pais = data.get("sys", {}).get("country", "")
+        descricao = data.get("weather", [{}])[0].get("description", "").capitalize()
+        temperatura = round(data.get("main", {}).get("temp", 0))
+        sensacao = round(data.get("main", {}).get("feels_like", 0))
+        umidade = data.get("main", {}).get("humidity", 0)
 
-    mensagem = (
-        f"🌤️ Clima em {nome}:\n"
-        f"- Descrição: {clima}\n"
-        f"- Temperatura: {temp}ºC\n"
-        f"- Sensação térmica: {sensacao}ºC\n"
-        f"- Umidade: {umidade}%"
-    )
-    return mensagem
+        mensagem = (
+            f"🌤️ Clima em {cidade}, {pais}:\n"
+            f"- Descrição: {descricao}\n"
+            f"- Temperatura: {temperatura}°C\n"
+            f"- Sensação térmica: {sensacao}°C\n"
+            f"- Umidade: {umidade}%"
+        )
+        return mensagem
+    except Exception as e:
+        print(f"[DEBUG] Erro ao formatar mensagem: {e}")
+        return "❌ Erro ao formatar os dados do clima."
