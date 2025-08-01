@@ -1,12 +1,25 @@
 import os
+import asyncio
+import nest_asyncio 
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters
 from controllers.bot_controller import start, help_command, handle_message
+from flask import Flask
+from threading import Thread
 
 load_dotenv()
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN", "").strip()
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-def main():
+flask_app = Flask(__name__)
+
+@flask_app.route("/")
+def home():
+    return "🤖 Bot está online!"
+
+def run_flask():
+    flask_app.run(host="0.0.0.0", port=8000)
+
+async def run_bot():
     app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
 
     app.add_handler(CommandHandler("start", start))
@@ -14,7 +27,13 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     print("🤖 Bot rodando...")
-    app.run_polling()
+    await app.run_polling()
+
 
 if __name__ == "__main__":
-    main()
+    flask_thread = Thread(target=run_flask)
+    flask_thread.start()
+
+    loop = asyncio.get_event_loop()
+    nest_asyncio.apply(loop)  
+    loop.run_until_complete(run_bot())
